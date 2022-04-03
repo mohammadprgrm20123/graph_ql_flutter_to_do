@@ -1,11 +1,14 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:graph_ql_2/api_client.dart';
+import 'package:graph_ql_2/modify_todo/controllers/edit_to_do_controller.dart';
 import 'package:graph_ql_2/todo_list/controllers/todo_list_controller.dart';
 import 'package:graph_ql_2/todo_list/views/delete_dialog_todo.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
-import '../../add_todo/views/add_to_do_dialog.dart';
+import '../../modify_todo/controllers/add_todo_controller.dart';
+import '../../modify_todo/views/modify_to_do_dialog.dart';
 import '../../share/models/todo_view_model.dart';
 
 class ListTodoPage extends GetView<ToDoListController> {
@@ -19,14 +22,13 @@ class ListTodoPage extends GetView<ToDoListController> {
         onPressed: () {
           Get.defaultDialog(
             title: 'insert new to do',
-            content: const AddToDoDialog()
+            content: ModifyToDoDialog(()=>AddToDoController())
           ).then((value) {
             if(value!=null){
               if(value is ToDoViewModel){
                 controller.listToDo.insert(0,value,);
               }
             }
-
           });
 
         },
@@ -93,10 +95,35 @@ class ListTodoPage extends GetView<ToDoListController> {
                 color: Colors.red,
               ),
             ),
-            const Icon(
-              Icons.edit,
-              color: Colors.blueAccent,
-            )
+           /* GestureDetector(
+              onTap: (){
+                Get.defaultDialog(
+                  content: ModifyToDoDialog(()=>EditToDoController(toDoViewModel: e))
+                ).then((value) {
+
+                  if(value!=null){
+                    if(value is ToDoViewModel){
+                      for (int i=0;i<controller.listToDo.length;i++) {
+
+                        if(controller.listToDo[i].id == value.id){
+                          controller.listToDo[i] =value;
+                          controller.listToDo.refresh();
+                        }
+                      }
+                    }
+                  }
+
+
+
+
+                });
+
+              },
+              child: const Icon(
+                Icons.edit,
+                color: Colors.blueAccent,
+              ),
+            )*/
           ],
         ),
       ),

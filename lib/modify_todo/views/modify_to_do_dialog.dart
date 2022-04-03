@@ -1,31 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:graph_ql_2/share/models/todo_view_model.dart';
+import 'package:graph_ql_2/getx_view.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
-import '../controllers/add_todo_controller.dart';
+import '../controllers/base_modify_todo_controller.dart';
 
-class AddToDoDialog extends GetView<AddToDoController> {
-  const AddToDoDialog({Key? key}) : super(key: key);
+
+class ModifyToDoDialog<T extends BaseModifyToDoController> extends GetxView<T> {
+  const ModifyToDoDialog(final GetxViewBuilder<T> controller,{Key? key}) : super(controller,key: key);
 
   @override
   Widget build(BuildContext context) {
-    Get.lazyPut(() => AddToDoController());
-
-    return Mutation(
+        return Mutation(
       options: MutationOptions(
-          document: gql(controller.insertMutation)),
+          document: gql(controller.modifyMutation)),
       builder: (MultiSourceResult<dynamic> Function(Map<String, dynamic>,
                   {Object? optimisticResult})
               insert,
           QueryResult<dynamic>? result) {
-        print(result.toString());
-
-
-        if(result?.data !=null){
-
-          ToDoViewModel toDoViewModel = ToDoViewModel.fromJson(result!.data!['insert_todos_one']);
-          Get.back(result: toDoViewModel);
+               if(result?.data !=null){
+         controller.setData(result: result!);
         }
 
         return Form(
@@ -69,17 +63,15 @@ class AddToDoDialog extends GetView<AddToDoController> {
                   : ElevatedButton(
                       onPressed: () {
                         if (controller.formKey.currentState!.validate()) {
-                          insert({
-                            'title': controller.toDoTextController.text,
-                            'is_public': controller.checkbox.value
-                          });
+                          insert(controller.setMapForRunMutation());
                         }
                       },
-                      child: const Text('create'))
+                      child: Text(controller.textButten))
             ],
           ),
         );
       },
     );
   }
+
 }
