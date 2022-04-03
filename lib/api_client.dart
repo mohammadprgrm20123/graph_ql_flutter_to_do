@@ -6,8 +6,6 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 
 class ApiClient{
 
-
-
   static Link createUrl() {
     final HttpLink httpLink = HttpLink(
       'https://hasura.io/learn/graphql',

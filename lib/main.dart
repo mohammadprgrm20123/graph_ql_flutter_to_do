@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:graph_ql_2/graph_ql_provider.dart';
 import 'package:graph_ql_2/todo_list/views/list_todo_page.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
@@ -16,9 +17,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const GetMaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: ListTodoPage(),
+    return ClientProvider(
+      child: const GetMaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: ListTodoPage(),
+      ),
     );
   }
 }
